@@ -557,13 +557,10 @@
             box-shadow: var(--shadow);
         }
 
-        /* NEW: Refresh Button */
+        /* NEW: Refresh button moved to header */
         .refresh-button {
-            position: fixed;
-            top: 80px;
-            right: 16px;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: white;
             border: 2px solid var(--gray-200);
@@ -572,7 +569,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 99;
             box-shadow: var(--shadow);
             transition: all var(--transition-fast);
         }
@@ -746,16 +742,45 @@
             color: var(--dark);
         }
 
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .search-container {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
         .search-box {
             padding: 14px 16px;
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-md);
-            width: 100%;
             font-size: 16px;
             transition: all var(--transition-fast);
+            flex: 1;
         }
 
         .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .category-filter {
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            background: white;
+            cursor: pointer;
+            min-width: 150px;
+            flex-shrink: 0;
+        }
+
+        .category-filter:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
         }
@@ -873,6 +898,20 @@
             background: rgba(239, 68, 68, 0.1);
             color: var(--danger);
             border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Category Badge */
+        .category-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            display: inline-block;
+            white-space: nowrap;
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 122, 255, 0.2);
+            margin-left: 6px;
         }
 
         /* Action Buttons - Fixed for Mobile */
@@ -1110,6 +1149,39 @@
             word-break: break-word;
         }
 
+        .cheque-details {
+            background: rgba(0, 122, 255, 0.05);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-top: 12px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .cheque-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .cheque-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .cheque-detail-label {
+            font-size: 12px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .cheque-detail-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark);
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+
         .transaction-footer {
             display: flex;
             justify-content: space-between;
@@ -1310,6 +1382,29 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+        }
+
+        /* Cheque Details Section */
+        .cheque-details-section {
+            background: rgba(0, 122, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 16px;
+            border: 1px solid rgba(0, 122, 255, 0.1);
+        }
+
+        .cheque-details-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cheque-details-section h4 i {
+            font-size: 14px;
         }
 
         /* Graphs Container - FIXED with scrollable charts */
@@ -1762,15 +1857,6 @@
                 font-size: 13px;
                 white-space: nowrap;
             }
-            
-            /* NEW: Refresh button positioning for mobile */
-            .refresh-button {
-                top: 70px;
-                right: 16px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
         }
 
         @media (min-width: 480px) and (max-width: 768px) {
@@ -1866,12 +1952,6 @@
             .print-summary {
                 flex-wrap: wrap;
                 overflow-x: visible;
-            }
-            
-            /* NEW: Refresh button positioning for desktop */
-            .refresh-button {
-                top: 100px;
-                right: 24px;
             }
         }
 
@@ -1981,10 +2061,6 @@
             .main-content {
                 padding-left: max(16px, env(safe-area-inset-left));
                 padding-right: max(16px, env(safe-area-inset-right));
-            }
-            
-            .refresh-button {
-                right: max(16px, env(safe-area-inset-right));
             }
         }
 
@@ -2200,11 +2276,6 @@
     <!-- NEW: Hidden PDF print container -->
     <div class="pdf-print-container" id="pdfPrintContainer"></div>
 
-    <!-- NEW: Refresh Button -->
-    <button class="refresh-button" id="refreshButton" title="Refresh Data">
-        <i class="fas fa-sync-alt"></i>
-    </button>
-
     <!-- Authentication Screen -->
     <div class="auth-container" id="authContainer">
         <div class="auth-card">
@@ -2259,6 +2330,10 @@
                     BalanceTrack
                 </a>
                 <div class="user-menu">
+                    <!-- NEW: Refresh button moved to header -->
+                    <button class="refresh-button" id="refreshButton" title="Refresh Data">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
                     <div class="user-avatar" id="userAvatar">JD</div>
                     <button class="btn btn-outline" id="logoutBtn">
                         <i class="fas fa-sign-out-alt"></i>
@@ -2282,7 +2357,7 @@
             <!-- Dashboard content will be loaded here -->
         </main>
 
-        <!-- Mobile Navigation -->
+        <!-- Mobile Navigation - UPDATED: Replaced Add Party with Add Transaction -->
         <nav class="mobile-nav">
             <button class="nav-item active" onclick="showDashboard()">
                 <i class="fas fa-home"></i>
@@ -2296,14 +2371,14 @@
                 <i class="fas fa-print"></i>
                 <span>Print</span>
             </button>
-            <button class="nav-item" onclick="openPartyModal()">
-                <i class="fas fa-user-plus"></i>
-                <span>Add Party</span>
+            <button class="nav-item" onclick="openTransactionModal()">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Add Transaction</span>
             </button>
         </nav>
     </div>
 
-    <!-- Add Party Modal -->
+    <!-- Add Party Modal - UPDATED: Replaced email with category field -->
     <div class="modal-overlay" id="partyModal">
         <div class="modal">
             <div class="modal-header">
@@ -2318,7 +2393,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label" for="partyType">Type</label>
-                        <select class="form-control" id="partyType">
+                        <select class="form-control" id="partyType" onchange="toggleCategoryField()">
                             <option value="sundry_debtors">Sundry Debtor (Customer)</option>
                             <option value="sundry_creditors">Sundry Creditor (Supplier)</option>
                         </select>
@@ -2327,6 +2402,12 @@
                         <label class="form-label" for="initialBalance">Initial Balance</label>
                         <input type="number" class="form-control" id="initialBalance" step="0.01" value="0" autocomplete="off">
                     </div>
+                </div>
+                <!-- NEW: Category field for debtors only -->
+                <div class="form-group suggestion-container" id="categoryFieldGroup">
+                    <label class="form-label" for="partyCategory">Category (Optional)</label>
+                    <input type="text" class="form-control" id="partyCategory" placeholder="Type to select or create category" autocomplete="off">
+                    <div class="suggestions-list" id="categorySuggestions"></div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="partyGSTIN">GSTIN (Optional)</label>
@@ -2337,10 +2418,6 @@
                     <textarea class="form-control" id="partyAddress" rows="2" placeholder="Enter complete address" autocomplete="off"></textarea>
                 </div>
                 <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="partyEmail">Contact Email</label>
-                        <input type="email" class="form-control" id="partyEmail" autocomplete="off">
-                    </div>
                     <div class="form-group">
                         <label class="form-label" for="partyPhone">Phone Number</label>
                         <input type="tel" class="form-control" id="partyPhone" autocomplete="off">
@@ -2362,7 +2439,7 @@
         </div>
     </div>
 
-    <!-- Add Transaction Modal -->
+    <!-- Add Transaction Modal - UPDATED: Added cheque details section -->
     <div class="modal-overlay" id="transactionModal">
         <div class="modal">
             <div class="modal-header">
@@ -2396,7 +2473,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="paymentMode">Payment Mode</label>
-                    <select class="form-control" id="paymentMode">
+                    <select class="form-control" id="paymentMode" onchange="toggleChequeDetails()">
                         <option value="cash">Cash</option>
                         <option value="bank_transfer">Bank Transfer</option>
                         <option value="cheque">Cheque</option>
@@ -2404,6 +2481,24 @@
                         <option value="card">Card</option>
                         <option value="other">Other</option>
                     </select>
+                </div>
+                <!-- NEW: Cheque Details Section -->
+                <div class="cheque-details-section" id="chequeDetailsSection" style="display: none;">
+                    <h4><i class="fas fa-money-check-alt"></i> Cheque Details</h4>
+                    <div class="form-group">
+                        <label class="form-label" for="chequeNumber">Cheque Number *</label>
+                        <input type="text" class="form-control" id="chequeNumber" placeholder="Enter cheque number">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="chequeDate">Cheque Date</label>
+                            <input type="date" class="form-control" id="chequeDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bankName">Bank Name</label>
+                            <input type="text" class="form-control" id="bankName" placeholder="Enter bank name">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="transactionDescription">Description</label>
@@ -2464,6 +2559,7 @@
         let currentFormIndex = -1;
         let charts = {};
         let currentReportType = 'party-summary';
+        let categories = []; // NEW: Store unique categories
 
         // DOM Elements
         const authContainer = document.getElementById('authContainer');
@@ -2481,6 +2577,7 @@
             setupEventListeners();
             setupKeyboardNavigation();
             setupPartySearch();
+            setupCategorySearch();
         });
 
         // Setup party search and suggestions
@@ -2509,8 +2606,8 @@
                 // Filter parties based on search query
                 suggestions = parties.filter(party => 
                     party.name.toLowerCase().includes(query) ||
-                    party.email?.toLowerCase().includes(query) ||
-                    party.phone?.includes(query)
+                    party.phone?.includes(query) ||
+                    (party.category && party.category.toLowerCase().includes(query))
                 ).slice(0, 5); // Limit to 5 suggestions for mobile
 
                 if (suggestions.length > 0) {
@@ -2545,7 +2642,10 @@
                     <div class="suggestion-item ${index === selectedIndex ? 'selected' : ''}" 
                          data-index="${index}"
                          onclick="selectSuggestion(${JSON.stringify(party).replace(/"/g, '&quot;')})">
-                        <div class="suggestion-name">${party.name}</div>
+                        <div>
+                            <div class="suggestion-name">${party.name}</div>
+                            ${party.category ? `<div style="font-size: 12px; color: var(--primary); margin-top: 2px;">${party.category}</div>` : ''}
+                        </div>
                         <div class="suggestion-type">
                             ${party.type === 'sundry_debtors' ? 'Debtor' : 'Creditor'}
                             <span class="currency-display">${formatCurrency(party.balance || 0)}</span>
@@ -2586,6 +2686,126 @@
                     suggestionsList.classList.remove('show');
                 }
             });
+        }
+
+        // Setup category search for party modal
+        function setupCategorySearch() {
+            const categoryInput = document.getElementById('partyCategory');
+            const suggestionsList = document.getElementById('categorySuggestions');
+
+            if (!categoryInput) return;
+
+            let selectedIndex = -1;
+            let suggestions = [];
+
+            categoryInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                suggestions = [];
+                selectedIndex = -1;
+
+                if (query.length < 1) {
+                    suggestionsList.classList.remove('show');
+                    return;
+                }
+
+                // Filter existing categories
+                suggestions = categories.filter(category => 
+                    category.toLowerCase().includes(query)
+                ).slice(0, 5);
+
+                if (suggestions.length > 0) {
+                    renderCategorySuggestions(suggestions);
+                    suggestionsList.classList.add('show');
+                } else {
+                    suggestionsList.classList.remove('show');
+                }
+            });
+
+            categoryInput.addEventListener('keydown', (e) => {
+                const items = suggestionsList.querySelectorAll('.suggestion-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateCategorySelection();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, 0);
+                    updateCategorySelection();
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    selectCategory(suggestions[selectedIndex]);
+                } else if (e.key === 'Escape') {
+                    suggestionsList.classList.remove('show');
+                }
+            });
+
+            function renderCategorySuggestions(suggestions) {
+                suggestionsList.innerHTML = suggestions.map((category, index) => `
+                    <div class="suggestion-item ${index === selectedIndex ? 'selected' : ''}" 
+                         data-index="${index}"
+                         onclick="selectCategory('${category.replace(/'/g, "\\'")}')">
+                        <div class="suggestion-name">${category}</div>
+                        <div class="suggestion-type">Category</div>
+                    </div>
+                `).join('');
+            }
+
+            function updateCategorySelection() {
+                const items = suggestionsList.querySelectorAll('.suggestion-item');
+                items.forEach((item, index) => {
+                    item.classList.toggle('selected', index === selectedIndex);
+                    if (index === selectedIndex) {
+                        item.scrollIntoView({ block: 'nearest' });
+                    }
+                });
+            }
+
+            window.selectCategory = function(category) {
+                categoryInput.value = category;
+                suggestionsList.classList.remove('show');
+            };
+
+            // Close suggestions when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!categoryInput.contains(e.target) && !suggestionsList.contains(e.target)) {
+                    suggestionsList.classList.remove('show');
+                }
+            });
+        }
+
+        // Toggle category field based on party type
+        function toggleCategoryField() {
+            const partyType = document.getElementById('partyType').value;
+            const categoryFieldGroup = document.getElementById('categoryFieldGroup');
+            
+            if (partyType === 'sundry_debtors') {
+                categoryFieldGroup.style.display = 'block';
+            } else {
+                categoryFieldGroup.style.display = 'none';
+                document.getElementById('partyCategory').value = '';
+            }
+        }
+
+        // Toggle cheque details based on payment mode
+        function toggleChequeDetails() {
+            const paymentMode = document.getElementById('paymentMode').value;
+            const chequeDetailsSection = document.getElementById('chequeDetailsSection');
+            
+            if (paymentMode === 'cheque') {
+                chequeDetailsSection.style.display = 'block';
+                // Set cheque date to today if empty
+                if (!document.getElementById('chequeDate').value) {
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('chequeDate').value = today;
+                }
+            } else {
+                chequeDetailsSection.style.display = 'none';
+                // Clear cheque fields
+                document.getElementById('chequeNumber').value = '';
+                document.getElementById('chequeDate').value = '';
+                document.getElementById('bankName').value = '';
+            }
         }
 
         // Setup keyboard navigation
@@ -2780,7 +3000,6 @@
             currentUser = null;
             authContainer.style.display = 'flex';
             appContainer.style.display = 'none';
-            refreshButton.style.display = 'none';
             hideLoading();
             document.getElementById('loginEmail').focus();
         }
@@ -2801,13 +3020,15 @@
                     loadTransactions()
                 ]);
                 
+                // Extract unique categories from debtors
+                extractCategories();
+                
                 // Show dashboard
                 showDashboard();
                 
                 // Show app with animation
                 authContainer.style.display = 'none';
                 appContainer.style.display = 'block';
-                refreshButton.style.display = 'flex';
                 
                 // Setup real-time subscription
                 setupRealtimeSubscription();
@@ -2818,6 +3039,13 @@
             }
             
             hideLoading();
+        }
+
+        // Extract unique categories from debtors
+        function extractCategories() {
+            const debtors = parties.filter(p => p.type === 'sundry_debtors' && p.category);
+            const uniqueCategories = [...new Set(debtors.map(p => p.category.trim()))].filter(Boolean);
+            categories = uniqueCategories.sort();
         }
 
         // Load parties from Supabase
@@ -2858,7 +3086,7 @@
             return currentPartyTransactions;
         }
 
-        // Show dashboard - UPDATED: Stats first, then quick actions on mobile
+        // Show dashboard - UPDATED: Added category filter
         async function showDashboard() {
             showLoading();
             currentParty = null;
@@ -2877,7 +3105,10 @@
                 document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                 document.querySelector('.nav-item:nth-child(1)').classList.add('active');
                 
-                // Build dashboard HTML - UPDATED: Stats first, then quick actions on mobile
+                // Get unique categories for filter dropdown
+                const uniqueCategories = [...new Set(sundryDebtors.map(p => p.category).filter(Boolean))].sort();
+                
+                // Build dashboard HTML
                 const html = `
                     <!-- Stats Section First on Mobile -->
                     <div class="dashboard-grid">
@@ -2962,7 +3193,13 @@
                     <div class="parties-container">
                         <div class="parties-header">
                             <div class="parties-title">Parties & Balances</div>
-                            <input type="text" class="search-box" id="partySearch" placeholder="Search parties..." oninput="filterParties()" tabindex="0">
+                            <div class="search-container">
+                                <input type="text" class="search-box" id="partySearch" placeholder="Search parties..." oninput="filterParties()" tabindex="0">
+                                <select class="category-filter" id="categoryFilter" onchange="filterPartiesByCategory()">
+                                    <option value="">All Categories</option>
+                                    ${uniqueCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                                </select>
+                            </div>
                         </div>
                         <div class="table-container">
                             <table>
@@ -2993,6 +3230,23 @@
             }
             
             hideLoading();
+        }
+
+        // Filter parties by category
+        function filterPartiesByCategory() {
+            const category = document.getElementById('categoryFilter').value;
+            const searchTerm = document.getElementById('partySearch')?.value.toLowerCase() || '';
+            const rows = document.querySelectorAll('#partiesTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const rowCategory = row.dataset.category || '';
+                
+                const matchesSearch = searchTerm === '' || text.includes(searchTerm);
+                const matchesCategory = category === '' || rowCategory === category;
+                
+                row.style.display = matchesSearch && matchesCategory ? '' : 'none';
+            });
         }
 
         // Show graphs/analytics
@@ -3096,7 +3350,7 @@
             hideLoading();
         }
 
-        // Update graphs based on filters - UPDATED: Custom horizontal bar chart with party names on left
+        // Update graphs based on filters
         function updateGraphs() {
             const startDate = document.getElementById('graphStartDate').value;
             const endDate = document.getElementById('graphEndDate').value;
@@ -3311,11 +3565,11 @@
                 `;
             }
             
-            // Create Custom Party Balances Chart - NEW: Horizontal bar chart with names on left
+            // Create Custom Party Balances Chart
             const sortedParties = [...filteredParties]
                 .filter(p => Math.abs(p.balance || 0) > 0)
                 .sort((a, b) => Math.abs(b.balance || 0) - Math.abs(a.balance || 0))
-                .slice(0, window.innerWidth < 768 ? 8 : 12); // Show fewer on mobile
+                .slice(0, window.innerWidth < 768 ? 8 : 12);
             
             if (sortedParties.length > 0) {
                 // Find maximum balance for scaling
@@ -3458,7 +3712,7 @@
             currentReportType = document.getElementById('reportType').value;
         }
 
-        // Generate print preview - UPDATED: Removed PDF button
+        // Generate print preview
         async function generatePrintPreview() {
             showLoading();
             
@@ -3516,7 +3770,7 @@
             hideLoading();
         }
 
-        // Generate party summary report - UPDATED: Removed PDF button
+        // Generate party summary report
         function generatePartySummaryReport(filteredParties, filteredTransactions, startDate, endDate, partyId, totalCredit, totalDebit, netTotal) {
             let totalOpeningBalance = 0;
             let totalCreditAmount = 0;
@@ -3535,7 +3789,7 @@
                 totalDebitAmount += partyDebit;
                 totalClosingBalance += closingBalance;
                 
-                // FIXED: Determine color based on party type and balance
+                // Determine color based on party type and balance
                 let balanceClass = '';
                 if (party.type === 'sundry_creditors') {
                     // Always show creditors in red (even if balance is positive)
@@ -3548,7 +3802,10 @@
                 return `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${party.name}</td>
+                        <td>
+                            ${party.name}
+                            ${party.category ? `<span class="category-badge">${party.category}</span>` : ''}
+                        </td>
                         <td>
                             <span class="party-type-badge ${party.type === 'sundry_debtors' ? 'party-type-debtor' : 'party-type-creditor'}">
                                 ${party.type === 'sundry_debtors' ? 'Debtor' : 'Creditor'}
@@ -3564,7 +3821,7 @@
                 `;
             }).join('');
             
-            // FIXED: Determine total closing balance color
+            // Determine total closing balance color
             let totalClosingBalanceClass = '';
             if (filteredParties.some(p => p.type === 'sundry_creditors')) {
                 // If there are creditors in the list, show in red
@@ -3655,7 +3912,7 @@
             `;
         }
 
-        // Generate transaction details report - UPDATED: Removed PDF button
+        // Generate transaction details report
         function generateTransactionDetailsReport(filteredParties, filteredTransactions, startDate, endDate, partyId, totalCredit, totalDebit, netTotal) {
             return `
                 <div class="print-preview" id="printContent">
@@ -3690,7 +3947,7 @@
                                 <tbody>
                                     ${filteredTransactions.map(trans => {
                                         const party = parties.find(p => p.id === trans.party_id);
-                                        // FIXED: Determine balance color based on party type
+                                        // Determine balance color based on party type
                                         let balanceColor = '';
                                         if (party?.type === 'sundry_creditors') {
                                             // Always show creditors in red
@@ -3941,6 +4198,7 @@
                         return {
                             'S.No.': index + 1,
                             'Party Name': party.name,
+                            'Category': party.category || '',
                             'Type': party.type === 'sundry_debtors' ? 'Sundry Debtor' : 'Sundry Creditor',
                             'Opening Balance': openingBalance,
                             'Credit Amount': partyCredit,
@@ -3953,6 +4211,7 @@
                     partyData.push({
                         'S.No.': 'TOTAL',
                         'Party Name': '',
+                        'Category': '',
                         'Type': '',
                         'Opening Balance': filteredParties.reduce((sum, p) => {
                             const partyTransactions = filteredTransactions.filter(t => t.party_id === p.id);
@@ -3970,7 +4229,7 @@
                     
                     // Format currency columns
                     const range = XLSX.utils.decode_range(ws['!ref']);
-                    for (let C = 3; C <= 6; ++C) {
+                    for (let C = 4; C <= 7; ++C) {
                         for (let R = range.s.r + 1; R <= range.e.r; ++R) {
                             const cell_address = {c: C, r: R};
                             const cell_ref = XLSX.utils.encode_cell(cell_address);
@@ -3982,13 +4241,14 @@
                     
                     // Set column widths
                     const wscols = [
-                        {wch: 8},  // S.No.
-                        {wch: 30}, // Party Name
-                        {wch: 15}, // Type
-                        {wch: 15}, // Opening Balance
-                        {wch: 15}, // Credit Amount
-                        {wch: 15}, // Debit Amount
-                        {wch: 15}  // Closing Balance
+                        {wch: 8},   // S.No.
+                        {wch: 30},  // Party Name
+                        {wch: 15},  // Category
+                        {wch: 15},  // Type
+                        {wch: 15},  // Opening Balance
+                        {wch: 15},  // Credit Amount
+                        {wch: 15},  // Debit Amount
+                        {wch: 15}   // Closing Balance
                     ];
                     ws['!cols'] = wscols;
                     
@@ -4123,7 +4383,7 @@
             });
         }
 
-        // Render parties table - FIXED: Always show creditors in red
+        // Render parties table - UPDATED: Added category display
         function renderPartiesTable(filterType = 'all') {
             let filteredParties = parties;
             
@@ -4149,7 +4409,7 @@
                 const balance = party.balance || 0;
                 const type = party.type === 'sundry_debtors' ? 'debtor' : 'creditor';
                 
-                // FIXED: Always show creditors in red, debtors show green if positive, red if negative
+                // Always show creditors in red, debtors show green if positive, red if negative
                 let balanceClass = '';
                 if (type === 'creditor') {
                     balanceClass = 'balance-creditor'; // Always red for creditors
@@ -4162,8 +4422,12 @@
                 return `
                     <tr tabindex="0" onclick="viewPartyDetails('${party.id}')" 
                          onkeydown="if(event.key==='Enter') viewPartyDetails('${party.id}')"
-                         data-index="${index}">
-                        <td><strong>${party.name}</strong></td>
+                         data-index="${index}"
+                         data-category="${party.category || ''}">
+                        <td>
+                            <strong>${party.name}</strong>
+                            ${party.category ? `<span class="category-badge">${party.category}</span>` : ''}
+                        </td>
                         <td class="currency-cell ${balanceClass} ${zeroBalance}">
                             ₹${formatCurrency(balance)}
                         </td>
@@ -4241,17 +4505,21 @@
         // Filter parties by search
         function filterParties() {
             const searchTerm = document.getElementById('partySearch').value.toLowerCase();
+            const category = document.getElementById('categoryFilter')?.value || '';
             const rows = document.querySelectorAll('#partiesTableBody tr');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(searchTerm) ? '' : 'none';
+                const rowCategory = row.dataset.category || '';
+                
+                const matchesSearch = searchTerm === '' || text.includes(searchTerm);
+                const matchesCategory = category === '' || rowCategory === category;
+                
+                row.style.display = matchesSearch && matchesCategory ? '' : 'none';
             });
-            
-            selectedRowIndex = -1;
         }
 
-        // View party details - FIXED: Always show creditors in red
+        // View party details - UPDATED: Added category display
         async function viewPartyDetails(partyId) {
             showLoading();
             
@@ -4278,7 +4546,7 @@
                     openingBalance = currentPartyTransactions[currentPartyTransactions.length - 1].previous_balance || 0;
                 }
                 
-                // FIXED: Determine balance color - always red for creditors
+                // Determine balance color - always red for creditors
                 let balanceColor = '';
                 let zeroBalance = '';
                 
@@ -4307,6 +4575,7 @@
                                         <span class="party-type-badge ${currentParty.type === 'sundry_debtors' ? 'party-type-debtor' : 'party-type-creditor'}" style="font-size: 0.875rem;">
                                             ${currentParty.type === 'sundry_debtors' ? 'Sundry Debtor' : 'Sundry Creditor'}
                                         </span>
+                                        ${currentParty.category ? `<span class="category-badge">${currentParty.category}</span>` : ''}
                                         <span class="status-badge ${currentParty.status === 'active' ? 'status-active' : 'status-inactive'}">
                                             ${currentParty.status || 'active'}
                                         </span>
@@ -4382,16 +4651,20 @@
                                                 </span>
                                             </span>
                                         </div>
+                                        ${currentParty.category ? `
+                                        <div class="info-item">
+                                            <span class="info-label">Category</span>
+                                            <span class="info-value">
+                                                <span class="category-badge">${currentParty.category}</span>
+                                            </span>
+                                        </div>
+                                        ` : ''}
                                         ${currentParty.gstin ? `
                                         <div class="info-item">
                                             <span class="info-label">GSTIN</span>
                                             <span class="info-value">${currentParty.gstin}</span>
                                         </div>
                                         ` : ''}
-                                        <div class="info-item">
-                                            <span class="info-label">Email</span>
-                                            <span class="info-value">${currentParty.email || 'Not provided'}</span>
-                                        </div>
                                         <div class="info-item">
                                             <span class="info-label">Phone</span>
                                             <span class="info-value">${currentParty.phone || 'Not provided'}</span>
@@ -4462,7 +4735,7 @@
             hideLoading();
         }
 
-        // Render party transactions - FIXED: Always show creditors in red
+        // Render party transactions - UPDATED: Added cheque details display
         function renderPartyTransactions() {
             if (currentPartyTransactions.length === 0) {
                 return `
@@ -4484,7 +4757,7 @@
                 const amount = transaction.amount;
                 const balanceAfter = transaction.new_balance;
                 
-                // FIXED: Determine balance color based on party type
+                // Determine balance color based on party type
                 let balanceColor = '';
                 if (currentParty.type === 'sundry_creditors') {
                     // Always show creditors in red
@@ -4493,6 +4766,10 @@
                     // Debtors show green if positive, red if negative
                     balanceColor = balanceAfter >= 0 ? 'balance-debtor' : 'balance-creditor';
                 }
+                
+                // Check if this is a cheque transaction
+                const isCheque = transaction.payment_mode === 'cheque';
+                const chequeDetails = isCheque && (transaction.cheque_number || transaction.bank_name);
                 
                 return `
                     <div class="transaction-item ${isCredit ? 'credit' : 'debit'}" 
@@ -4517,6 +4794,29 @@
                             ${transaction.payment_mode ? `<div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">Mode: ${transaction.payment_mode.replace('_', ' ').toUpperCase()}</div>` : ''}
                         </div>
                         
+                        ${chequeDetails ? `
+                        <div class="cheque-details">
+                            ${transaction.cheque_number ? `
+                            <div class="cheque-detail-row">
+                                <span class="cheque-detail-label">Cheque No.</span>
+                                <span class="cheque-detail-value">${transaction.cheque_number}</span>
+                            </div>
+                            ` : ''}
+                            ${transaction.cheque_date ? `
+                            <div class="cheque-detail-row">
+                                <span class="cheque-detail-label">Cheque Date</span>
+                                <span class="cheque-detail-value">${formatDate(transaction.cheque_date)}</span>
+                            </div>
+                            ` : ''}
+                            ${transaction.bank_name ? `
+                            <div class="cheque-detail-row">
+                                <span class="cheque-detail-label">Bank Name</span>
+                                <span class="cheque-detail-value">${transaction.bank_name}</span>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ` : ''}
+                        
                         <div class="transaction-footer">
                             <div class="transaction-amount ${isCredit ? 'balance-debtor' : 'balance-creditor'}">
                                 ${isCredit ? '+' : '-'}₹${formatCurrency(amount)}
@@ -4536,6 +4836,7 @@
             const title = document.getElementById('partyModalTitle');
             
             form.reset();
+            toggleCategoryField(); // Initialize category field visibility
             
             if (partyId) {
                 // Edit mode
@@ -4544,19 +4845,25 @@
                     document.getElementById('partyName').value = party.name;
                     document.getElementById('partyType').value = party.type;
                     document.getElementById('initialBalance').value = party.balance || 0;
+                    document.getElementById('partyCategory').value = party.category || '';
                     document.getElementById('partyGSTIN').value = party.gstin || '';
                     document.getElementById('partyAddress').value = party.address || '';
-                    document.getElementById('partyEmail').value = party.email || '';
                     document.getElementById('partyPhone').value = party.phone || '';
                     document.getElementById('partyNotes').value = party.notes || '';
                     form.dataset.editing = partyId;
                     title.textContent = 'Edit Party';
+                    
+                    // Show/hide category field based on party type
+                    toggleCategoryField();
                 }
             } else {
                 // Add mode
                 delete form.dataset.editing;
                 title.textContent = 'Add New Party';
                 document.getElementById('initialBalance').value = '0';
+                document.getElementById('partyCategory').value = '';
+                document.getElementById('partyType').value = 'sundry_debtors';
+                toggleCategoryField(); // Show category field by default for debtors
             }
             
             document.getElementById('partyModal').classList.add('active');
@@ -4572,6 +4879,8 @@
             document.getElementById('transactionId').value = '';
             document.getElementById('transactionPartySearch').value = '';
             document.getElementById('transactionParty').value = '';
+            document.getElementById('paymentMode').value = 'cash';
+            toggleChequeDetails(); // Initialize cheque details visibility
             
             if (transactionId) {
                 // Edit mode
@@ -4586,7 +4895,16 @@
                     document.getElementById('transactionAmount').value = transaction.amount;
                     document.getElementById('paymentMode').value = transaction.payment_mode || 'cash';
                     document.getElementById('transactionDescription').value = transaction.description || '';
+                    
+                    // Set cheque details if available
+                    if (transaction.payment_mode === 'cheque') {
+                        document.getElementById('chequeNumber').value = transaction.cheque_number || '';
+                        document.getElementById('chequeDate').value = transaction.cheque_date || '';
+                        document.getElementById('bankName').value = transaction.bank_name || '';
+                    }
+                    
                     title.textContent = 'Edit Transaction';
+                    toggleChequeDetails();
                 }
             } else {
                 // Add mode
@@ -4605,6 +4923,7 @@
                 }
                 document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
                 title.textContent = 'Add Transaction';
+                toggleChequeDetails();
             }
             
             document.getElementById('transactionModal').classList.add('active');
@@ -4737,23 +5056,31 @@
             hideLoading();
         }
 
-        // Handle party form submission
+        // Handle party form submission - UPDATED: Added category field
         async function handlePartySubmit(e) {
             e.preventDefault();
             
             const partyId = e.target.dataset.editing;
+            const partyType = document.getElementById('partyType').value;
+            
             const partyData = {
                 name: document.getElementById('partyName').value.trim(),
-                type: document.getElementById('partyType').value,
+                type: partyType,
                 balance: parseFloat(document.getElementById('initialBalance').value) || 0,
                 gstin: document.getElementById('partyGSTIN').value.trim() || null,
                 address: document.getElementById('partyAddress').value.trim() || null,
-                email: document.getElementById('partyEmail').value.trim() || null,
                 phone: document.getElementById('partyPhone').value.trim() || null,
                 notes: document.getElementById('partyNotes').value.trim() || null,
                 status: 'active',
                 user_id: currentUser.id
             };
+
+            // Only add category for debtors
+            if (partyType === 'sundry_debtors') {
+                partyData.category = document.getElementById('partyCategory').value.trim() || null;
+            } else {
+                partyData.category = null;
+            }
 
             if (!partyData.name) {
                 showToast('Party name is required', 'error');
@@ -4799,7 +5126,7 @@
             hideLoading();
         }
 
-        // Handle transaction form submission
+        // Handle transaction form submission - UPDATED: Added cheque details
         async function handleTransactionSubmit(e) {
             e.preventDefault();
             
@@ -4821,6 +5148,16 @@
                 showToast('Please enter a valid amount', 'error');
                 document.getElementById('transactionAmount').focus();
                 return;
+            }
+
+            // Validate cheque details if payment mode is cheque
+            if (paymentMode === 'cheque') {
+                const chequeNumber = document.getElementById('chequeNumber').value.trim();
+                if (!chequeNumber) {
+                    showToast('Cheque number is required for cheque payments', 'error');
+                    document.getElementById('chequeNumber').focus();
+                    return;
+                }
             }
 
             showLoading();
@@ -4850,7 +5187,7 @@
             hideLoading();
         }
 
-        // Create new transaction
+        // Create new transaction - UPDATED: Added cheque details
         async function createTransaction(partyId, amount, type, date, paymentMode, description) {
             // Get current party balance
             const { data: party, error: partyError } = await supabase
@@ -4873,7 +5210,7 @@
                 newBalance = type === 'credit' ? currentBalance - amount : currentBalance + amount;
             }
             
-            // Create transaction
+            // Prepare transaction data
             const transactionData = {
                 party_id: partyId,
                 amount: amount,
@@ -4886,6 +5223,14 @@
                 user_id: currentUser.id
             };
             
+            // Add cheque details if payment mode is cheque
+            if (paymentMode === 'cheque') {
+                transactionData.cheque_number = document.getElementById('chequeNumber').value.trim();
+                transactionData.cheque_date = document.getElementById('chequeDate').value || null;
+                transactionData.bank_name = document.getElementById('bankName').value.trim() || null;
+            }
+            
+            // Create transaction
             const { error: transactionError } = await supabase
                 .from('transactions')
                 .insert([transactionData]);
@@ -4904,7 +5249,7 @@
             showToast('Transaction added successfully', 'success');
         }
 
-        // Update existing transaction
+        // Update existing transaction - UPDATED: Added cheque details
         async function updateTransaction(transactionId, partyId, amount, type, date, paymentMode, description) {
             // Get the original transaction
             const { data: oldTransaction, error: fetchError } = await supabase
@@ -4984,6 +5329,9 @@
                     loadTransactions()
                 ]);
                 
+                // Extract categories again
+                extractCategories();
+                
                 if (currentParty) {
                     await viewPartyDetails(currentParty.id);
                 } else {
@@ -5017,6 +5365,7 @@
                     }, 
                     async () => {
                         await loadParties();
+                        extractCategories(); // Update categories
                         if (currentParty) {
                             currentParty = parties.find(p => p.id === currentParty.id);
                         }
@@ -5138,6 +5487,7 @@
         window.showAllParties = showAllParties;
         window.filterPartiesByType = filterPartiesByType;
         window.filterParties = filterParties;
+        window.filterPartiesByCategory = filterPartiesByCategory;
         window.closeModal = closeModal;
         window.refreshData = refreshData;
         window.updateGraphs = updateGraphs;
@@ -5145,6 +5495,9 @@
         window.exportToExcel = exportToExcel;
         window.printReport = printReport;
         window.selectSuggestion = selectSuggestion;
+        window.selectCategory = selectCategory;
+        window.toggleCategoryField = toggleCategoryField;
+        window.toggleChequeDetails = toggleChequeDetails;
         window.changeReportType = changeReportType;
         
         // Add window resize handler for charts
