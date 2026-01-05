@@ -2902,8 +2902,8 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Type</th>
                                         <th style="text-align: right;">Current Balance</th>
+                                        <th>Type</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -4097,13 +4097,13 @@
                          onkeydown="if(event.key==='Enter') viewPartyDetails('${party.id}')"
                          data-index="${index}">
                         <td><strong>${party.name}</strong></td>
+                        <td class="currency-cell ${balanceClass} ${zeroBalance}">
+                            ₹${formatCurrency(balance)}
+                        </td>
                         <td>
                             <span class="party-type-badge party-type-${type}">
                                 ${type === 'debtor' ? 'Sundry Debtor' : 'Sundry Creditor'}
                             </span>
-                        </td>
-                        <td class="currency-cell ${balanceClass} ${zeroBalance}">
-                            ₹${formatCurrency(balance)}
                         </td>
                         <td>
                             <span class="status-badge ${party.status === 'active' ? 'status-active' : 'status-inactive'}">
