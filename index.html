@@ -557,6 +557,35 @@
             box-shadow: var(--shadow);
         }
 
+        /* NEW: Refresh Button */
+        .refresh-button {
+            position: fixed;
+            top: 80px;
+            right: 16px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--gray-200);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: var(--shadow);
+            transition: all var(--transition-fast);
+        }
+
+        .refresh-button:hover {
+            transform: rotate(180deg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .refresh-button:active {
+            transform: scale(0.95);
+        }
+
         /* Main Content */
         .main-content {
             max-width: 1400px;
@@ -1589,14 +1618,19 @@
                 padding: 16px;
             }
             
+            /* UPDATED: Dashboard grid order for mobile */
             .dashboard-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
+                margin-top: 20px;
             }
             
+            /* UPDATED: Quick actions below stats on mobile */
             .quick-actions {
                 grid-template-columns: 1fr;
                 gap: 12px;
+                margin-top: 24px;
+                margin-bottom: 24px;
             }
             
             .action-btn {
@@ -1728,6 +1762,15 @@
                 font-size: 13px;
                 white-space: nowrap;
             }
+            
+            /* NEW: Refresh button positioning for mobile */
+            .refresh-button {
+                top: 70px;
+                right: 16px;
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
         }
 
         @media (min-width: 480px) and (max-width: 768px) {
@@ -1824,6 +1867,12 @@
                 flex-wrap: wrap;
                 overflow-x: visible;
             }
+            
+            /* NEW: Refresh button positioning for desktop */
+            .refresh-button {
+                top: 100px;
+                right: 24px;
+            }
         }
 
         @media (min-width: 1024px) {
@@ -1855,7 +1904,8 @@
             .mobile-nav,
             .mobile-header,
             .app-header,
-            .toast-container {
+            .toast-container,
+            .refresh-button {
                 display: none !important;
             }
             
@@ -1931,6 +1981,10 @@
             .main-content {
                 padding-left: max(16px, env(safe-area-inset-left));
                 padding-right: max(16px, env(safe-area-inset-right));
+            }
+            
+            .refresh-button {
+                right: max(16px, env(safe-area-inset-right));
             }
         }
 
@@ -2145,6 +2199,11 @@
 
     <!-- NEW: Hidden PDF print container -->
     <div class="pdf-print-container" id="pdfPrintContainer"></div>
+
+    <!-- NEW: Refresh Button -->
+    <button class="refresh-button" id="refreshButton" title="Refresh Data">
+        <i class="fas fa-sync-alt"></i>
+    </button>
 
     <!-- Authentication Screen -->
     <div class="auth-container" id="authContainer">
@@ -2414,6 +2473,7 @@
         const loadingOverlay = document.getElementById('loadingOverlay');
         const keyboardHelp = document.getElementById('keyboardHelp');
         const pdfPrintContainer = document.getElementById('pdfPrintContainer');
+        const refreshButton = document.getElementById('refreshButton');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -2599,6 +2659,9 @@
             // Logout
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
 
+            // NEW: Refresh button
+            refreshButton.addEventListener('click', refreshData);
+
             // Modals
             document.getElementById('closePartyModal').addEventListener('click', () => closeModal('party'));
             document.getElementById('closeTransactionModal').addEventListener('click', () => closeModal('transaction'));
@@ -2717,6 +2780,7 @@
             currentUser = null;
             authContainer.style.display = 'flex';
             appContainer.style.display = 'none';
+            refreshButton.style.display = 'none';
             hideLoading();
             document.getElementById('loginEmail').focus();
         }
@@ -2743,6 +2807,7 @@
                 // Show app with animation
                 authContainer.style.display = 'none';
                 appContainer.style.display = 'block';
+                refreshButton.style.display = 'flex';
                 
                 // Setup real-time subscription
                 setupRealtimeSubscription();
@@ -2793,7 +2858,7 @@
             return currentPartyTransactions;
         }
 
-        // Show dashboard
+        // Show dashboard - UPDATED: Stats first, then quick actions on mobile
         async function showDashboard() {
             showLoading();
             currentParty = null;
@@ -2812,27 +2877,9 @@
                 document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
                 document.querySelector('.nav-item:nth-child(1)').classList.add('active');
                 
-                // Build dashboard HTML
+                // Build dashboard HTML - UPDATED: Stats first, then quick actions on mobile
                 const html = `
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="openPartyModal()" tabindex="0">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Add Party</span>
-                        </button>
-                        <button class="action-btn" onclick="openTransactionModal()" tabindex="0">
-                            <i class="fas fa-exchange-alt"></i>
-                            <span>Add Transaction</span>
-                        </button>
-                        <button class="action-btn" onclick="showGraphs()" tabindex="0">
-                            <i class="fas fa-chart-line"></i>
-                            <span>View Graphs</span>
-                        </button>
-                        <button class="action-btn" onclick="showPrint()" tabindex="0">
-                            <i class="fas fa-print"></i>
-                            <span>Print Report</span>
-                        </button>
-                    </div>
-
+                    <!-- Stats Section First on Mobile -->
                     <div class="dashboard-grid">
                         <div class="stat-card debtors" onclick="showDebtors()" tabindex="0">
                             <div class="stat-header">
@@ -2878,6 +2925,26 @@
                                 ${netPosition >= 0 ? 'Net receivable' : 'Net payable'}
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Quick Actions Section Below Stats on Mobile -->
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="openPartyModal()" tabindex="0">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Add Party</span>
+                        </button>
+                        <button class="action-btn" onclick="openTransactionModal()" tabindex="0">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>Add Transaction</span>
+                        </button>
+                        <button class="action-btn" onclick="showGraphs()" tabindex="0">
+                            <i class="fas fa-chart-line"></i>
+                            <span>View Graphs</span>
+                        </button>
+                        <button class="action-btn" onclick="showPrint()" tabindex="0">
+                            <i class="fas fa-print"></i>
+                            <span>Print Report</span>
+                        </button>
                     </div>
 
                     <div class="party-type-tabs">
@@ -4908,6 +4975,9 @@
         // Refresh all data
         async function refreshData() {
             showLoading();
+            // Add rotation animation to refresh button
+            refreshButton.style.transform = 'rotate(180deg)';
+            
             try {
                 await Promise.all([
                     loadParties(),
@@ -4924,6 +4994,12 @@
             } catch (error) {
                 showToast('Failed to refresh data: ' + error.message, 'error');
             }
+            
+            // Reset refresh button animation
+            setTimeout(() => {
+                refreshButton.style.transform = 'rotate(0deg)';
+            }, 300);
+            
             hideLoading();
         }
 
