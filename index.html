@@ -582,6 +582,31 @@
             transform: scale(0.95);
         }
 
+        /* NEW: Mobile refresh button */
+        .mobile-refresh-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--gray-200);
+            color: var(--primary);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all var(--transition-fast);
+        }
+
+        .mobile-refresh-button:hover {
+            transform: rotate(180deg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .mobile-refresh-button:active {
+            transform: scale(0.95);
+        }
+
         /* Main Content */
         .main-content {
             max-width: 1400px;
@@ -1857,6 +1882,11 @@
                 font-size: 13px;
                 white-space: nowrap;
             }
+            
+            /* FIX: Mobile refresh button visibility */
+            .mobile-refresh-button {
+                display: flex;
+            }
         }
 
         @media (min-width: 480px) and (max-width: 768px) {
@@ -1883,7 +1913,8 @@
 
         @media (min-width: 769px) {
             .mobile-header,
-            .mobile-nav {
+            .mobile-nav,
+            .mobile-refresh-button {
                 display: none;
             }
             
@@ -1985,7 +2016,8 @@
             .mobile-header,
             .app-header,
             .toast-container,
-            .refresh-button {
+            .refresh-button,
+            .mobile-refresh-button {
                 display: none !important;
             }
             
@@ -2343,13 +2375,18 @@
             </div>
         </header>
 
-        <!-- Mobile Header -->
+        <!-- Mobile Header - UPDATED: Added refresh button -->
         <div class="mobile-header">
             <div class="logo">
                 <i class="fas fa-balance-scale"></i>
                 BalanceTrack
             </div>
-            <div class="user-avatar" id="mobileUserAvatar">JD</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="mobile-refresh-button" id="mobileRefreshButton" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <div class="user-avatar" id="mobileUserAvatar">JD</div>
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -2400,7 +2437,7 @@
                     </div>
                     <div class="form-group currency-input">
                         <label class="form-label" for="initialBalance">Initial Balance</label>
-                        <input type="number" class="form-control" id="initialBalance" step="0.01" value="0" autocomplete="off">
+                        <input type="number" class="form-control" id="initialBalance" step="0.01" placeholder="0.00" autocomplete="off">
                     </div>
                 </div>
                 <!-- NEW: Category field for debtors only -->
@@ -2570,6 +2607,7 @@
         const keyboardHelp = document.getElementById('keyboardHelp');
         const pdfPrintContainer = document.getElementById('pdfPrintContainer');
         const refreshButton = document.getElementById('refreshButton');
+        const mobileRefreshButton = document.getElementById('mobileRefreshButton'); // NEW
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', () => {
@@ -2879,8 +2917,9 @@
             // Logout
             document.getElementById('logoutBtn').addEventListener('click', handleLogout);
 
-            // NEW: Refresh button
+            // NEW: Refresh buttons
             refreshButton.addEventListener('click', refreshData);
+            mobileRefreshButton.addEventListener('click', refreshData);
 
             // Modals
             document.getElementById('closePartyModal').addEventListener('click', () => closeModal('party'));
@@ -4838,13 +4877,16 @@
             form.reset();
             toggleCategoryField(); // Initialize category field visibility
             
+            // FIX: Clear initial balance field completely
+            document.getElementById('initialBalance').value = '';
+            
             if (partyId) {
                 // Edit mode
                 const party = parties.find(p => p.id === partyId);
                 if (party) {
                     document.getElementById('partyName').value = party.name;
                     document.getElementById('partyType').value = party.type;
-                    document.getElementById('initialBalance').value = party.balance || 0;
+                    document.getElementById('initialBalance').value = party.balance || '';
                     document.getElementById('partyCategory').value = party.category || '';
                     document.getElementById('partyGSTIN').value = party.gstin || '';
                     document.getElementById('partyAddress').value = party.address || '';
@@ -4860,7 +4902,7 @@
                 // Add mode
                 delete form.dataset.editing;
                 title.textContent = 'Add New Party';
-                document.getElementById('initialBalance').value = '0';
+                document.getElementById('initialBalance').value = ''; // Empty field
                 document.getElementById('partyCategory').value = '';
                 document.getElementById('partyType').value = 'sundry_debtors';
                 toggleCategoryField(); // Show category field by default for debtors
@@ -5063,10 +5105,14 @@
             const partyId = e.target.dataset.editing;
             const partyType = document.getElementById('partyType').value;
             
+            // FIX: Handle empty initial balance - treat as 0
+            const initialBalanceValue = document.getElementById('initialBalance').value;
+            const balance = initialBalanceValue === '' ? 0 : parseFloat(initialBalanceValue) || 0;
+            
             const partyData = {
                 name: document.getElementById('partyName').value.trim(),
                 type: partyType,
-                balance: parseFloat(document.getElementById('initialBalance').value) || 0,
+                balance: balance,
                 gstin: document.getElementById('partyGSTIN').value.trim() || null,
                 address: document.getElementById('partyAddress').value.trim() || null,
                 phone: document.getElementById('partyPhone').value.trim() || null,
@@ -5320,8 +5366,9 @@
         // Refresh all data
         async function refreshData() {
             showLoading();
-            // Add rotation animation to refresh button
+            // Add rotation animation to refresh buttons
             refreshButton.style.transform = 'rotate(180deg)';
+            mobileRefreshButton.style.transform = 'rotate(180deg)';
             
             try {
                 await Promise.all([
@@ -5343,9 +5390,10 @@
                 showToast('Failed to refresh data: ' + error.message, 'error');
             }
             
-            // Reset refresh button animation
+            // Reset refresh button animations
             setTimeout(() => {
                 refreshButton.style.transform = 'rotate(0deg)';
+                mobileRefreshButton.style.transform = 'rotate(0deg)';
             }, 300);
             
             hideLoading();
